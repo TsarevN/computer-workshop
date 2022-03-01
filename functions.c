@@ -1,347 +1,320 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 #include "functions.h"
-#include <stdio.h>
-#include <stdbool.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
-/////////////////////////////////////////             дз модуль  (сдать до 25.10)         /////////////////////////////////////////////////////////////////////////////////
+#include <stdio.h> //ввод и вывод.
+#include <locale.h> //русский язык.
+#include <stdbool.h> //тип данных bool. false or true.
+#include <string.h> //работа со строками.
+#include <math.h> //математические функции.
+#include <ctype.h> //обработка символов.
+#include <stdlib.h> //работа с динамическими массивами.
+#include <time.h> //рандомные числа.
 
-float Ex_1()
+void writeFromFileAnArray(char* filename, char* str)
 {
-	float a = 0;
-	float x = 0;
-	float c = 0;
-	scanf_s("%f", &a);
-	scanf_s("%f", &x);
-	scanf_s("%f", &c);
-	float L = (sqrt(exp(x) - pow(cos(pow(x, 2) * pow(a, 5)), 4)) + pow(atan(a - pow(x, 5)), 4)) / (exp(1) * sqrt(abs(a + x * pow(c, 4))));
-	return L;
-}
-
-float Ex_2(t)
-{
-	float v = 0;
-	v = 3 * t * t - 6 * t;
-	return v;
-}
-
-float Ex_3()
-{
-	float a = 0;
-	float b = 0;
-	float c = 0;
-	float D = 0;
-	float x1 = 0;
-	float x2 = 0;
-	printf("Введите a:");
-	scanf_s("%f", &a);
-	printf("Введите b:");
-	scanf_s("%f", &b);
-	printf("Введите c:");
-	scanf_s("%f", &c);
-	
-	D = (b*b) - (4 * a * c);
-
-
-	if (a == 0)
+	FILE* f;
+	int c;
+	int i = 0;
+	fopen_s(&f, filename, "r");
+	if (!f)
 	{
-		printf("Введите другой параметр");
 		exit(1);
 	}
-	else
+	while ((c = getc(f)) != EOF)
 	{
-		if (D < 0)
+		str[i] = c;
+		i++;
+	}
+	fclose(f);
+}
+
+void readingFromFile(char* filename)
+{
+	FILE* f;
+	int c;
+	fopen_s(&f, filename, "r");
+	if (!f)
+	{
+		exit(1);
+	}
+	while ((c = getc(f)) != EOF)
+	{
+		printf("%c", c);
+	}
+	fclose(f);
+}
+
+void writingToFile(char* filename, char* message, int sizeMessage)
+{
+	FILE* f;
+	fopen_s(&f, filename, "w+");
+	if (!f)
+	{
+		printf("error");
+		exit(1);
+	}
+	for (int i = 0; i < sizeMessage; i++)
+	{
+		putc(message[i], f);
+	}
+	fclose(f);
+}
+
+void randomInitialDoubleArray(int** array, int rows, int cols, int min, int max)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
 		{
-			printf("Нет решений");
-			exit(1);
+			array[i][j] = (rand() % max) + min;
+		}
+	}
+}
+
+void randomInitialArray(int* array, int size, int min, int max)
+{
+	for (int i = 0; i < size; i++)
+	{
+		array[i] = (rand() % max) + min;
+	}
+}
+
+void sortArrayDwarf(int* array, int size)
+{
+	int i = 1;
+	int j = 2;
+	while (i < size)
+	{
+		if (array[i - 1] <= array[i])
+		{
+			i = j;
+			j++;
 		}
 		else
 		{
-			if (D == 0)
+			int t = array[i];
+			array[i] = array[i - 1];
+			array[i - 1] = t;
+			i--;
+			if (i == 0)
 			{
-				x1 = -b / 2 * a;
-				printf("x = %g", x1);
+				i = j;
+				j++;
 			}
-			else
+		}
+	}
+}
+
+void sortArrayBubble(int* array, int size)
+{
+	for (int i = 0; i < size - 1; i++)
+	{
+		for (int j = 0; j < size - i - 1; j++)
+		{
+			if (array[j] > array[j + 1])	// <, если надо в порядке убывания.
 			{
-				x1 = -((b + sqrt(D)) / 2 * a);
-				x2 = -((b - sqrt(D)) / 2 * a);
-				if (x1 == x2)
+				int temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+			}
+		}
+	}
+}
+
+void printIntArray(int* array, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("%d ", array[i]);
+	}
+}
+
+void printIntDoubleArray(int** array, int rows, int cows)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cows; j++)
+		{
+			printf("%d ", array[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void printCharArray(char* array, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		printf("%c", array[i]);
+	}
+}
+
+void strToUpper(char* str)
+{
+	while (*str)
+	{
+		if (islower(*str))
+		{
+			*str = toupper(*str);
+		}
+		str++;
+	}
+}
+
+void strToLower(char* str)
+{
+	while (*str)
+	{
+		if (isupper(*str))
+		{
+			*str = tolower(*str);
+		}
+		str++;
+	}
+}
+
+void GameOne()
+{
+	const int MIN = 1;
+	const int MAX = 100;
+	int guess = 0;
+	int guesses = 0;
+	int answer;
+
+	srand(time(0));
+
+	answer = (rand() % MAX) + MIN;
+
+	do
+	{
+		printf("Enter a guess: ");
+		scanf_s("%d", &guess);
+		if (guess > answer)
+		{
+			printf("To high!\n");
+		}
+		else if (guess < answer)
+		{
+			printf("To low\n");
+		}
+		else
+			printf("CORRECT!\n");
+		guesses++;
+	} while (guess != answer);
+	printf("********************\n");
+	printf("answer: %d\n", answer);
+	printf("guesses: %d\n", guesses);
+	printf("********************");
+}
+
+void GameTwo()
+{
+	char questions[][100] = { "1. What year did the C language debut?: ",
+									 "2. Who is credited with creating C: ",
+									 "3. What is the predecessor of C: " };
+
+	char options[][100] = { "A. 1969", "B. 1972", "C. 1975", "D. 1999",
+								  "A. Dennis Ritchie", "B. Nikola Tesla", "C. John Carmack", "D. Doc Brown",
+								  "A. Objective C", "B. B", "C. C++", "D. C#" };
+
+	char answer[3] = { 'B', 'A', 'B' };
+
+	int numberOfQuestions = sizeof(questions) / sizeof(questions[0]); // = 3
+
+	char guess;
+	int score = 0;
+
+	printf("QUIZ GAME\n");
+
+	for (int i = 0; i < numberOfQuestions; i++)
+	{
+		printf("***************\n");
+		printf("%s\n", questions[i]);
+		printf("***************\n");
+
+		for (int j = (i * 4); j < (i * 4) + 4; j++)
+		{
+			printf("%s\n", options[j]);
+		}
+		printf("guess: ");
+		scanf_s("%c", &guess); // error!!!!!!!
+		while (getchar() != '\n');
+
+		guess = toupper(guess);
+
+		if (guess == answer[i])
+		{
+			printf("CORRECT\n");
+			score++;
+		}
+		else
+			printf("WRONG!\n");
+	}
+
+	printf("FINAL SCORE: %d/%d\n", score, numberOfQuestions);
+}
+
+void clearMemoryDoubArr(int** array, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		free(array[i]);
+	}
+	free(array);
+}
+
+int arrayUnique(int* array, int size)
+{
+	for (int counter1 = 0; counter1 < size; counter1++)
+	{
+		for (int counter2 = counter1 + 1; counter2 < size; counter2++)
+		{
+			if (array[counter1] == array[counter2]) // если найден одинаковый элемент
+			{
+				for (int counter_shift = counter2; counter_shift < size - 1; counter_shift++)
 				{
-					printf("Одно решение: %g", x1);
+					array[counter_shift] = array[counter_shift + 1]; // выполнить сдвиг всех остальных элементов массива на -1, начиная со следующего элемента, после найденного дубля
 				}
-				else
+				size -= 1; // уменьшить размер массива на 1
+
+				if (array[counter1] == array[counter2]) // если следующий элемент - дубль
 				{
-					printf("x1 = %g\n", x1);
-					printf("x2 = %g\n", x2);
+					counter2--; // выполнить переход на предыдущий элемент     
 				}
 			}
 		}
 	}
+	return size;
 }
 
-float Ex_4(int x, double time)
+long double fact(int N)
 {
-	double res = 0; // стоимость разговора
-
-	int num = 0;
-	num = (x % 10) + ((x / 10) % 10); // номер города
-	switch (num)
-	{
-		case 9:
-		{
-			res = 11.0*time;
-			printf("Винница - код 045, %g", res); //11грн
-			break;
-		}
-		case 10:
-		{
-			res = 13.0 * time;
-			printf("Харьков - код 046, %g", res); //13грн
-			break;
-		}
-		case 8:
-		{
-			res = 18.0 * time;
-			printf("Киев - код 044, %g", res); //18грн
-			break;
-		}
-		case 12:
-		{ 
-			res = 15.0 * time;
-			printf("Одесса - код 048, %g", res); //15грн
-			break;
-		}
-		default:
-		{
-
-			printf("Введён неверный код");
-			break;
-		}
-	}
+	if (N < 0) // если пользователь ввел отрицательное число
+		return 0; // возвращаем ноль
+	if (N == 0) // если пользователь ввел ноль,
+		return 1; // возвращаем факториал от нуля - не удивляетесь, но это 1 =)
+	else // Во всех остальных случаях
+		return N * fact(N - 1); // делаем рекурсию.
 }
 
-int Ex_5()
+int isPrime(unsigned int num)
 {
-	int a = 0;
-	for (int i = 1000; i <= 9999; i++)
-	{
-		a = pow(i % 10, 4) + pow((i / 10) % 10, 4) + pow((i / 100) % 10, 4) + pow(i / 1000, 4);
-		if (a == i)
-		{
-			printf("%d\n", i);
-		}
-		else
-		{
-			continue;
-		}
-	}
+	 for (int i = 2; (i * i) <= num; i++) {
+		  if (num % i == 0) {
+				return 0;
+		  }
+	 }
+	 return 1;
 }
 
-int Ex_6()
+int addArray(int* array_1, int* array_2, int size)
 {
-	int* arr;
-	int x = 0;
-	int number = 0;
-
-	scanf_s("%d", &x);
-
-	arr = malloc(x * sizeof(int));
-
-	for (int i = 0; i < x; ++i)
+	int temp = 0;
+	for (int i = 0; i < size; i++)
 	{
-		scanf_s("%d", &arr[i]);
+		temp += array_1[i] + array_2[i];
 	}
-
-	for (int i = 0; i < x; ++i)
-	{
-		number += pow(2, i) * arr[x - 1 - i];
-	}
-
-	return number;
+	return temp;
 }
-
-int Ex_7(int x, int y)
-{
-	srand(time(NULL));
-	int* a;
-	a = malloc(x * y * sizeof(int));
-	for (int i = 0; i < x * y; i++)
-	{
-		a[i] = rand() % (10 - (-10) + 1) + (-10);  //rand() % (max - min + 1) + min  (рандом от - 10 до 10)
-		a[i] *= 3;											 //увеличил на 3
-		a[i] *= -1;											 //поменял знак на противоположный
-	}
-	for (int i = 0; i < x; i++)
-	{
-
-		for (int j = 0; j < y; j++)
-		{
-			printf_s("%d ", a[i * y + j]);
-		}
-		printf_s("\n");
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int factorial(x)
-{
-	unsigned long long int number = 1;
-	for (int i = 1; i <= x; i++)
-	{
-		number *= i;
-	}
-	return number;
-}
-
-bool IsPrime(x)
-{
-	for (int i = 2; i <= sqrt(x); i++)
-	{
-		if (x % i == 0)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-int CountDel(x)
-{
-	int count = 0;
-	for (int i = 1; i <= factorial(x); i++)
-	{
-		if (factorial(x) % i == 0)
-		{
-			count += 1;
-		}
-		else
-		{
-			count = count;
-		}
-	}
-	return count;
-}
-
-int CoverChislo(x)
-{
-	int res = 1;
-	for (int i = 2; i < x; i++)
-	{
-		if (x % i == 0)
-		{
-			res += i;
-		}
-		else
-		{
-			res = res;
-		}
-	}
-	if (res == x)
-	{
-		printf("Число совершенно");
-	}
-	else
-	{
-		printf("Число Несовершенно");
-	}
-}
-
-int CredAref(x)
-{
-	int count = 0;
-	int sum = 0;
-	int result = 0;
-	while (x > 0)
-	{
-		if (((x % 10) % 2) == 0)
-		{
-			count += 1;
-			sum += x%10;
-		}
-		x /= 10;
-	}
-	result = sum / count;
-	return result;
-}
-
-int NOD(x)
-{
-	int res = 0;
-	for (int i = 1; i < x; i++)
-	{
-		if (x % i == 0)
-		{
-			res = i;
-		}
-	}
-	return res;
-}
-
-int CountPrimeDel(x)
-{
-	int count = 0;
-	for (int i = 1; i <= x; i++)
-	{
-		if ((x % i == 0) && (IsPrime(i) == 1))
-		{
-			count = count + 1;
-		}
-		else
-		{
-			count = count;
-		}
-	}
-	return count;
-}
-
-bool DelNeKvadart(x)
-{
-	int number = 0;
-	for (int i = 1; i <= x; i++)
-	{
-		if (x % i == 0)
-		{
-			if (i * i == x)
-			{
-				return false;
-			}
-		}
-	}
-	return true;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-float SumChoTo(x)
-{
-	float number = 0;
-	for (float i = 1; i <= x; i++)
-	{
-		number += 1 / i;
-	}
-	return number;
-}
-
-int TretieChislo(x)
-{
-	int res = 0;
-	while (x > 1000)
-	{
-		x /= 10;
-	}
-	res = x % 10;
-	return res;
-
-}
-
-int PoslednieChislo(x)
-{
-	x = x - (x / 10) * 10;
-	return x;
-	
-}
-
-
-
-

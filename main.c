@@ -1,47 +1,23 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "functions.h"
-#include <locale.h>
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
+#include <stdio.h> //ввод и вывод.
+#include <locale.h> //русский язык.
+#include <stdbool.h> //тип данных bool. false or true.
+#include <string.h> //работа со строками.
+#include <math.h> //математические функции.
+#include <ctype.h> //обработка символов.
+#include <stdlib.h> //работа с динамическими массивами.
+#include <time.h> //рандомные числа.
+#include "functions.h" //заголовочный файл
 
 int main()
 {
-	setlocale(LC_ALL, "Rus");
-	//int x = 0;
-	//int y = 0;
-	//float time = 0;
-	//scanf_s("%d", &x);
-	//scanf_s("%d", &y);
-	//scanf_s("%f", &time);
-
-	/////////////////////////////////////////////////////////////            ДЗ МОДУЛЬ               ////////////////////////////////////////////////////////////////////////////////////////
-	
-	//printf("%f", Ex_1());    // Номер 1
-	//printf("%f", Ex_2(x));   // Номер 2
-	//Ex_3();						// Номер 3
-	//Ex_4(x, time);           // Номер 4 
-	//Ex_5();						// Номер 5
-	//printf("%d", Ex_6());		// Номер 6 		
-	//Ex_7(x, y);					// Номер 7 
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//printf("Ответ на 1 номер: %llu\n", CountDel(x));
-	//printf ("Ответ на 2 номер: %d = ", x);
-	//CoverChislo(x);
-	//printf("\nОтвет на 4 номер: %d\n", CredAref(x));
-	//printf("Ответ на 5 номер: %d", NOD(x));
-	//printf("Ответ на 6 номер: %d", CountPrimeDel(x));
-	//printf("Ответ на 7 номер: %d", DelNeKvadart(x));
-
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//printf("Ответ на 1 номер: %f", SumChoTo(x));
-	//printf("Ответ на 2 номер: %d", TretieChislo(x));
-	//printf("Ответ на 3 номер: %d", PoslednieChislo(x));
-
+	setlocale(LC_ALL, "rus");
 
 	
+
+	printf("\n");
 	return 0;
 }
