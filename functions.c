@@ -1,7 +1,3 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-
 #include "functions.h"
 #include <stdio.h> //ввод и вывод.
 #include <locale.h> //русский язык.
@@ -301,12 +297,12 @@ long double fact(int N)
 
 int isPrime(unsigned int num)
 {
-	 for (int i = 2; (i * i) <= num; i++) {
-		  if (num % i == 0) {
-				return 0;
-		  }
-	 }
-	 return 1;
+	for (int i = 2; (i * i) <= num; i++) {
+		if (num % i == 0) {
+			return 0;
+		}
+	}
+	return 1;
 }
 
 int addArray(int* array_1, int* array_2, int size)
@@ -317,4 +313,233 @@ int addArray(int* array_1, int* array_2, int size)
 		temp += array_1[i] + array_2[i];
 	}
 	return temp;
+}
+
+void giveTegStart(char* str, char* tegStart)
+{
+	int size = 0;
+	while (str[size])
+		size++;
+
+	for (int i = 1; i < size + 1; i++)
+		tegStart[i] = str[i - 1];
+	tegStart[0] = '<';
+	tegStart[size + 1] = '>';
+	tegStart[size + 2] = '\0';
+}
+
+void giveTegFinish(char* str, char* tegFinish)
+{
+	int size = 0;
+	while (str[size])
+		size++;
+	tegFinish[0] = '<';
+	tegFinish[1] = '/';
+	for (int i = 2; i < size + 2; i++)
+		tegFinish[i] = str[i - 2];
+
+	tegFinish[size + 2] = '>';
+	tegFinish[size + 3] = '\0';
+}
+
+char* my_strstr(const char* haystack, const char* needle)
+{
+	const char* temp;
+	const char* c;
+	temp = needle;
+	while (*haystack)
+	{
+		c = haystack;
+		while (*(haystack++) == *(needle++))
+		{
+			if (!(*needle))
+				return (char*)c;
+			if (!(*haystack))
+				return NULL;
+		}
+		needle = temp;
+	}
+	return NULL;
+}
+
+void Zamena(char* fileName, char* teg, char* str)
+{
+	int sizeTeg = 0;
+	while (teg[sizeTeg] != '\0')
+	{
+		sizeTeg++;
+	}
+	char* tegStart = (char*)malloc(sizeTeg + 2 * sizeof(int));
+	if (!tegStart)
+		exit(EXIT_FAILURE);
+	char* tegFinish = (char*)malloc(sizeTeg + 3 * sizeof(int));
+	if (!tegFinish)
+		exit(EXIT_FAILURE);
+	char* fileArray = (char*)malloc(1024 * sizeof(int));
+	if (!fileArray)
+		exit(EXIT_FAILURE);
+
+	giveTegStart(teg, tegStart);									// tegStart  = "<teg>"      size = 5;
+	giveTegFinish(teg, tegFinish);								// tegFinish = "</teg>"     size = 6;
+
+	int sizeTegStart = 0;
+	while (tegStart[sizeTegStart])
+		sizeTegStart++;
+
+	
+	//Считываем файл и записываем в fileArray
+	FILE* fp;
+	int c;
+	int i = 0;
+	fopen_s(&fp, fileName, "r");
+	if (!fp)
+	{
+		printf("Не удалось открыть файл");
+		getchar();
+		exit(1);
+	}
+	while ((c = getc(fp)) != EOF)
+	{
+		fileArray[i] = c;
+		i++;
+	}
+	fileArray[i] = '\0';
+	fclose(fp);
+
+	char* indexStart = my_strstr(fileArray, tegStart);
+	if (indexStart == NULL)
+	{
+		printf("Teg not found");
+		exit(1);
+	}
+	int indexStart2 = indexStart - fileArray + sizeTegStart - 1;
+
+	char* indexFinish = my_strstr(fileArray, tegFinish);
+	if (indexFinish == NULL)
+	{
+		printf("Teg not found");
+		exit(1);
+	}
+	int indexFinish1 = indexFinish - fileArray;
+	int countIndex = indexFinish1 - indexStart2 - 1;
+	int sizeStr = 0;
+	while (str[sizeStr])
+		sizeStr++;
+
+	//Если размер строки в теге и в заданной строке равен
+	if (countIndex - sizeStr == 0)
+	{
+		for (int i = 1; i <= countIndex; i++)
+			fileArray[indexStart2 + i] = str[i - 1];
+		int k = 0;
+		while (fileArray[k])
+			k++;
+		fileArray[k] = '\0';
+	}
+
+	int sizeFileArray = 0;
+	while (fileArray[sizeFileArray])
+		sizeFileArray++;
+
+	//Если размер строки в теге больше размера заданной строки str.
+	int limiter = sizeFileArray - indexFinish1;
+	if (countIndex - sizeStr > 0)
+	{
+		for (int i = 1; i <= sizeStr; i++)
+			fileArray[indexStart2 + i] = str[i - 1];
+		for (int i = 1; i <= limiter; i++)
+			fileArray[indexStart2 + i + sizeStr] = fileArray[indexFinish1 - 1 + i];
+		fileArray[indexStart2 + 1 + sizeStr + limiter] = '\0';
+	}
+
+	//Если размер строки в теге меньше размера заданной строки str.
+	if (countIndex - sizeStr < 0)
+	{
+
+		int h = sizeStr - countIndex; //на сколько надо сдвинуть.
+		char* temp = (char*)malloc(sizeFileArray + h * sizeof(char));
+		if (!temp)
+			exit(EXIT_FAILURE);
+		for (int i = 0; i < indexStart2 + 1; i++)
+		{
+			temp[i] = fileArray[i];
+		}
+		for (int i = 0; i < sizeStr; i++)
+		{
+			temp[indexStart2 + 1 + i] = str[i];
+		}
+		for (int i = 0; i < sizeFileArray - indexFinish1; i++)
+		{
+			temp[indexStart2 + 1 + i + sizeStr] = fileArray[indexFinish1 + i];
+		}
+		for (int i = 0; i < sizeFileArray + h; i++)
+			fileArray[i] = temp[i];
+		fileArray[sizeFileArray + h] = '\0';
+		free(temp);
+	}
+
+	//Открываем файл на перезапись
+	FILE* f;
+	fopen_s(&f, fileName, "w");
+	if (!f)
+	{
+		printf("Не удалось открыть файл");
+		getchar();
+		exit(1);
+	}
+	int size = 0;
+	while (fileArray[size])
+		size++;
+	for (int i = 0; i < size; i++)
+	{
+		putc(fileArray[i], f);
+	}
+
+	fclose(f);
+
+	free(tegStart);
+	free(tegFinish);
+	free(fileArray);
+}
+
+void removeSpace(char* arr)
+{
+	int n = 0;
+	while (arr[n])
+		n++;
+
+	int space = 0;
+	int k = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		while (k == 0 && i < n && arr[i] == ' ')
+			i++;
+
+		if (arr[i] == ' ')
+		{
+			if (!space)
+			{
+				arr[k++] = arr[i];
+				space = 1;
+			}
+		}
+		else if (ispunct(arr[i]))
+		{
+			if (k > 0 && arr[k - 1] == ' ')
+				arr[k - 1] = arr[i];
+			else
+				arr[k++] = arr[i];
+
+			space = 0;
+		}
+		else
+		{
+			arr[k++] = arr[i];
+			space = 0;
+		}
+	}
+	arr[k] = '\0';
+	if (arr[k - 1] = ' ')
+		arr[k - 1] = '\0';
 }

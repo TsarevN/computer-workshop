@@ -1,7 +1,3 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-
 #pragma once
 #include <stdbool.h>
 
@@ -132,10 +128,38 @@ void clearMemoryDoubArr(int** array, int size);
 
 /*
 * Сумма элементво двух массивов.
-* пример: 
-* ar1 = { 2, 4 } 
-* ar2 = { 3, 5 } 
+* пример:
+* ar1 = { 2, 4 }
+* ar2 = { 3, 5 }
 * return = 14;
 * @return сумма элементов массивов.
 */
 int addArray(int* array_1, int* array_2, int size);
+
+/* 
+* Получает на вход строку "teg" на выход "<teg>".
+*/
+void giveTegStart(char* str, char* tegStart);
+
+/*
+* Получает на вход строку "teg" на выход "</teg>".
+*/
+void giveTegFinish(char* str, char* tegFinish);
+
+/*
+* Собственная функция strstr.
+*/
+char* my_strstr(const char* haystack, const char* needle);
+
+/*
+* Функция на вход принимает имя XML файла, имя тега и строку,
+* и печатает результат замены в файл каждого содержимого xml тега на строку.
+* (деллает замену только в первом найденном теге)
+* (тег должен быть без аттрибутов)
+*/
+void Zamena(char* fileName, char* teg, char* str);
+
+/*
+* Удаляет кратные пробелы.
+*/
+void removeSpace(char* arr);
